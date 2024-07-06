@@ -1,25 +1,32 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect } from "react";
+import useLocalStorage from "./hooks/useLocalStorage";
+import useWindowSize from "./hooks/useWindowSize";
+import "./App.css";
 
-function App() {
+const App = () => {
+  const [theme, setTheme] = useLocalStorage("theme", "light");
+  const { width } = useWindowSize();
+  const isMobile = width < 768;
+
+  useEffect(() => {
+    if (isMobile) {
+      setTheme("light");
+    }
+  }, [isMobile, setTheme]);
+
+  const toggleTheme = () => {
+    setTheme((prevTheme) => (prevTheme === "light" ? "dark" : "light"));
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className={`app ${theme}`}>
+      <div className="app-header">
+        <h1>Click to change the color theme</h1>
+        <button onClick={toggleTheme}>Toggle Theme</button>
+      </div>
+      <p>The mobile version only has a “light” theme</p>
     </div>
   );
-}
+};
 
 export default App;
